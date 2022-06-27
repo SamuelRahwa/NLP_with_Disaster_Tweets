@@ -4,7 +4,7 @@ import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
+from sklearn.model_selection import GridSearchCV, cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import plot_confusion_matrix, classification_report, accuracy_score, f1_score, precision_score, recall_score
@@ -16,19 +16,11 @@ warnings.filterwarnings('ignore')
 # Classification Models
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier, DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 import xgboost as xgb
-
-# Scalers
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, Normalizer, RobustScaler
-
-
-# Categorical Create Dummies
-from sklearn.preprocessing import OneHotEncoder
 
 # Classification Models
 def run_class_model(model, X_train, y_train, X_test, y_test):
