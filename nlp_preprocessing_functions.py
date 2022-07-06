@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
+# Importing Functions
 
-# In[1]:
-
+import warnings
+warnings.filterwarnings('ignore')
 
 import pandas as pd
 import numpy as np
@@ -22,8 +21,13 @@ plt.rcParams.update({'font.size': 18})
 import seaborn as sns 
 sns.set_style('darkgrid')
 
+from pandarallel import pandarallel
+pandarallel.initialize(progress_bar = True)
+
 from collections import Counter
 from wordcloud import WordCloud
+
+import emoji
 
 import nltk, spacy, re, string, unicodedata, contractions
 
@@ -33,7 +37,6 @@ from scispacy.abbreviation import AbbreviationDetector
 
 import pkg_resources
 from symspellpy import SymSpell, Verbosity
-
 
 from nltk import word_tokenize, sent_tokenize, FreqDist
 from nltk.tokenize import TweetTokenizer
@@ -48,20 +51,23 @@ nltk.download('wordnet')
 nltk.download('stopwords')
 
 
-# # Cleaning
-
-# In[2]:
-
 
 # Preprocessing Functions
 
 
-# In[3]:
+
+def tweets_tokenizer(text):
+    tweet_tokenizer = TweetTokenizer()
+    return tweet_tokenizer.tokenize(text)
+
+def emoji_to_word(text):
+    return emoji.demojize(text)
+
+def convert_to_string(text):
+    return str(text).replace('[', '').replace(']', '').replace(', ', '\n').replace(',', '\n')
 
 
 nlp = spacy.load("en_core_web_lg", disable = ["parser", "ner"])
-
-
 
 sym_spell = SymSpell(max_dictionary_edit_distance = 3, prefix_length = 7)
 
@@ -143,10 +149,7 @@ def lemmatize(text):
     return ' '.join(lemmatized_text)
 
 
-# # Primary Processing Function
-
-# In[4]:
-
+# Primary Processing Function
 
 def text_preprocesser_nlp(text):
     
@@ -165,3 +168,12 @@ def text_preprocesser_nlp(text):
     clean = lemmatize(clean)
     
     return clean
+
+
+# Additonal Cleaning: Removing low occurrence words (<5)
+
+def low_occurence_words(text):
+    freq = pd.Series(' '.join(data['text']).split()).value_counts()
+    low_freq = list(freq.loc[freq < 10].index)
+    return text.apply(lambda x: " ".join(x for x in x.split() if x not in low_freq))
+
